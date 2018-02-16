@@ -173,7 +173,7 @@ def parse_buffer_pattern(b, pattern):
 
 
 def fuzzy_escape(string, camelcase):
-    # Escape string for python regexp.
+    """Escape string for python regexp."""
     p = re.sub(r'([a-zA-Z0-9_])', r'\1.*', re.escape(string))
     if camelcase and re.search(r'[A-Z]', string):
         p = re.sub(r'([a-z])', (lambda pat:

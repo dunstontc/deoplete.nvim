@@ -8,8 +8,11 @@ from .base import Base
 
 import re
 from deoplete.util import (
-    get_buffer_config, convert2list,
-    parse_buffer_pattern, set_pattern, getlines)
+    get_buffer_config,
+    convert2list,
+    parse_buffer_pattern,
+    set_pattern, getlines
+)
 
 
 class Source(Base):
@@ -39,7 +42,7 @@ class Source(Base):
                     'lua', ['\.', ':'])
 
     def get_complete_position(self, context):
-        # Check member prefix pattern.
+        """Check member prefix pattern."""
         for prefix_pattern in convert2list(
                 get_buffer_config(context, context['filetype'],
                                   'deoplete_member_prefix_patterns',

@@ -28,7 +28,7 @@ class Source(Base):
         words = parse_buffer_pattern(
             reversed(getlines(self.vim, max([1, line - LINES_ABOVE]), line)),
             context['keyword_patterns'])
-        candidates += [{'word': x, 'menu': 'A'} for x in words]
+        candidates += [{'word': x, 'menu': '↑'} for x in words]
 
         # grab ':changes' command output
         p = re.compile(r'[\s\d]+')
@@ -41,12 +41,12 @@ class Source(Base):
                 lines.add(change_line)
 
         words = parse_buffer_pattern(lines, context['keyword_patterns'])
-        candidates += [{'word': x, 'menu': 'C'} for x in words]
+        candidates += [{'word': x, 'menu': '+'} for x in words]
 
         # lines below
         words = parse_buffer_pattern(
             getlines(self.vim, line, line + LINES_BELOW),
             context['keyword_patterns'])
-        candidates += [{'word': x, 'menu': 'B'} for x in words]
+        candidates += [{'word': x, 'menu': '↓'} for x in words]
 
         return candidates
