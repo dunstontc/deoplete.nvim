@@ -41,16 +41,6 @@ function! deoplete#init#_initialize() abort
   call deoplete#mapping#_init()
 endfunction
 function! deoplete#init#_channel() abort
-  if !has('timers')
-    call deoplete#util#print_error(
-          \ 'deoplete requires timers support("+timers").')
-    return 1
-  endif
-  if !exists('v:t_list')
-    call deoplete#util#print_error('deoplete requires neovim 0.2.0+.')
-    return 1
-  endif
-
   let python3 = get(g:, 'python3_host_prog', 'python3')
   if !executable(python3)
     call deoplete#util#print_error(
@@ -94,7 +84,7 @@ function! deoplete#init#_channel() abort
       call deoplete#util#print_error(
           \ 'deoplete failed to load. '
           \ .'Try the :UpdateRemotePlugins command and restart Neovim. '
-          \ .'See also :CheckHealth.')
+          \ .'See also :checkhealth.')
     endif
 
     return 1

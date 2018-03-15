@@ -73,7 +73,7 @@ If you want to read for Neovim-python/python3 interface install documentation,
 you should read |provider-python| and the Wiki.
 https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 
-You can check the Python3 installation by |:CheckHealth| command.
+You can check the Python3 installation by using the |:checkhealth| command.
 
 ==============================================================================
 INTERFACE						*deoplete-interface*
@@ -502,6 +502,10 @@ deoplete#enable_logging({level}, {logfile})
 		|deoplete-source-attribute-is_debug_enabled| to debug the
 		sources.
 
+						*deoplete#send_event()*
+deoplete#send_event({event})
+		Call |deoplete-source-attribute-on_event| manually.
+		{event} is event name.
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 					*deoplete-key-mappings*
@@ -953,8 +957,9 @@ on_post_filter
 
 					*deoplete-source-attribute-on_event*
 on_event	(Function)			(Optional)
-		It is called when |BufRead|, |BufNewFile|, |BufWritePost|,
-		|VimLeavePre| or deoplete is initialized.
+		It is called when |BufNew|, |BufNewFile|, |BufWritePost|,
+		|VimLeavePre| or |deoplete#send_event()| or deoplete is
+		initialized.
 		It is useful to make cache.
 		It takes {self} and {context} as its parameter.
 
@@ -1376,6 +1381,40 @@ A: Please enable logging feature like this. >
        call deoplete#enable_logging('DEBUG', 'deoplete.log')
        call deoplete#custom#source('jedi', 'is_debug_enabled', 1)
 <
+
+Q: Deoplete makes closing Vim/neovim slow.
+https://github.com/Shougo/deoplete.nvim/issues/656
+
+A: Have you quit Vim/neovim inside autocmd?  Please read |autocmd-nested|
+section.  deoplete uses |VimLeavePre| autocmd to quit the child processes.
+>
+	function! OnTermClose()
+	  if len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1
+	    quit!
+	  else
+	    call feedkeys(' ')
+	  endif
+	endfunction
+	autocmd TermClose * nested call OnTermClose()
+<
+Q: "Channel id must be a positive integer" error.
+https://github.com/Shougo/deoplete.nvim/issues/406
+
+A: Your neovim or neovim-python module is too old.
+Please update them to the latest version.
+
+Q: "Broken pipe" error.
+https://github.com/Shougo/deoplete.nvim/issues/653
+
+A: Please test dp_main.py.
+https://github.com/Shougo/deoplete.nvim/issues/635#issuecomment-363331278
+
+Please test neovim-python module.
+https://github.com/neovim/python-client#usage-through-the-python-repl
+
+Note: You can disable parallel feature by |g:deoplete#num_processes|.  It is
+workaround.
+
 							*deoplete-faq-config*
 2. Configuration~
 
