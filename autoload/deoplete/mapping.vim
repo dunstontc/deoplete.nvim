@@ -46,7 +46,7 @@ function! deoplete#mapping#_rpcrequest_wrapper(sources) abort
         \ deoplete#init#_context('Manual', a:sources))
 endfunction
 function! deoplete#mapping#_undo_completion() abort
-  if !exists('v:completed_item') || empty(v:completed_item)
+  if empty(v:completed_item)
     return ''
   endif
 

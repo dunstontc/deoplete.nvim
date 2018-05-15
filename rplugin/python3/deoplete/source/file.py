@@ -21,11 +21,12 @@ class Source(Base):
         self.mark = '[F]'
         self.min_pattern_length = 0
         self.rank = 150
-        self._isfname = ''
+        self.events = ['InsertEnter']
+        self.vars = {
+            'enable_buffer_path': False,
+        }
 
-    def on_init(self, context):
-        self._buffer_path = context['vars'].get(
-            'deoplete#file#enable_buffer_path', 0)
+        self._isfname = ''
 
     def on_event(self, context):
         self._isfname = self.vim.call(
@@ -38,7 +39,7 @@ class Source(Base):
 
     def gather_candidates(self, context):
         if not self._isfname:
-            return []
+            self.on_event(context)
 
         p = self._longest_path_that_exists(context, context['input'])
         if p in (None, []) or p == '/' or re.search('//+$', p):
@@ -72,7 +73,7 @@ class Source(Base):
     def _substitute_path(self, context, path):
         m = re.match(r'(\.{1,2})/+', path)
         if m:
-            if self._buffer_path and context['bufpath']:
+            if self.vars['enable_buffer_path'] and context['bufpath']:
                 base = context['bufpath']
             else:
                 base = os.path.join(context['cwd'], 'x')

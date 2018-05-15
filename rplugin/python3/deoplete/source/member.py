@@ -8,11 +8,15 @@ from .base import Base
 
 import re
 from deoplete.util import (
+<<<<<<< HEAD
     get_buffer_config,
     convert2list,
     parse_buffer_pattern,
     set_pattern, getlines
 )
+=======
+    convert2list, parse_buffer_pattern, set_pattern, getlines)
+>>>>>>> 26334d38a530754368a8fce91ca8f5ef8d3643a3
 
 
 class Source(Base):
@@ -27,27 +31,28 @@ class Source(Base):
         self._object_pattern = r'[a-zA-Z_]\w*(?:\(\)?)?'
         self._prefix = ''
 
-        self._prefix_patterns = {}
-        set_pattern(self._prefix_patterns,
+        prefix_patterns = {}
+        set_pattern(prefix_patterns,
                     '_', '\.')
-        set_pattern(self._prefix_patterns,
+        set_pattern(prefix_patterns,
                     'c,objc', ['\.', '->'])
-        set_pattern(self._prefix_patterns,
+        set_pattern(prefix_patterns,
                     'cpp,objcpp', ['\.', '->', '::'])
-        set_pattern(self._prefix_patterns,
+        set_pattern(prefix_patterns,
                     'perl,php', ['->'])
-        set_pattern(self._prefix_patterns,
+        set_pattern(prefix_patterns,
                     'ruby', ['\.', '::'])
-        set_pattern(self._prefix_patterns,
+        set_pattern(prefix_patterns,
                     'lua', ['\.', ':'])
+        self.vars = {
+            'prefix_patterns': prefix_patterns,
+        }
 
     def get_complete_position(self, context):
         """Check member prefix pattern."""
         for prefix_pattern in convert2list(
-                get_buffer_config(context, context['filetype'],
-                                  'deoplete_member_prefix_patterns',
-                                  'deoplete#member#prefix_patterns',
-                                  self._prefix_patterns)):
+                self.get_filetype_var(
+                    context['filetype'], 'prefix_patterns')):
             m = re.search(self._object_pattern + prefix_pattern + r'\w*$',
                           context['input'])
             if m is None or prefix_pattern == '':

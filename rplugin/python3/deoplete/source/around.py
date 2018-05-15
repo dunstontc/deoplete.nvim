@@ -25,10 +25,18 @@ class Source(Base):
         candidates = []
 
         # lines above
+        keyword_pattern = self.vim.call(
+            'deoplete#util#get_keyword_pattern',
+            context['filetype'], self.keyword_patterns)
         words = parse_buffer_pattern(
             reversed(getlines(self.vim, max([1, line - LINES_ABOVE]), line)),
+<<<<<<< HEAD
             context['keyword_patterns'])
         candidates += [{'word': x, 'menu': '↑'} for x in words]
+=======
+            keyword_pattern)
+        candidates += [{'word': x, 'menu': 'A'} for x in words]
+>>>>>>> 26334d38a530754368a8fce91ca8f5ef8d3643a3
 
         # grab ':changes' command output
         p = re.compile(r'[\s\d]+')
@@ -40,6 +48,7 @@ class Source(Base):
             if change_line and change_line != '-invalid-':
                 lines.add(change_line)
 
+<<<<<<< HEAD
         words = parse_buffer_pattern(lines, context['keyword_patterns'])
         candidates += [{'word': x, 'menu': '+'} for x in words]
 
@@ -48,5 +57,14 @@ class Source(Base):
             getlines(self.vim, line, line + LINES_BELOW),
             context['keyword_patterns'])
         candidates += [{'word': x, 'menu': '↓'} for x in words]
+=======
+        words = parse_buffer_pattern(lines, keyword_pattern)
+        candidates += [{'word': x, 'menu': 'C'} for x in words]
+
+        # lines below
+        words = parse_buffer_pattern(
+            getlines(self.vim, line, line + LINES_BELOW), keyword_pattern)
+        candidates += [{'word': x, 'menu': 'B'} for x in words]
+>>>>>>> 26334d38a530754368a8fce91ca8f5ef8d3643a3
 
         return candidates
