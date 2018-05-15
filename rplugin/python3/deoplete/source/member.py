@@ -8,15 +8,7 @@ from .base import Base
 
 import re
 from deoplete.util import (
-<<<<<<< HEAD
-    get_buffer_config,
-    convert2list,
-    parse_buffer_pattern,
-    set_pattern, getlines
-)
-=======
     convert2list, parse_buffer_pattern, set_pattern, getlines)
->>>>>>> 26334d38a530754368a8fce91ca8f5ef8d3643a3
 
 
 class Source(Base):
